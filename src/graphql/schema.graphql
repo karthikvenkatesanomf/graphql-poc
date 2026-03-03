@@ -1,0 +1,189 @@
+# ============================================================
+# Bookstore GraphQL API — Schema-First Approach
+# Covers: Queries, Mutations, Subscriptions, Enums, Interfaces,
+#         Union Types, Input Types, Custom Scalars, Pagination,
+#         Field Resolvers, Directives (@deprecated)
+# ============================================================
+
+# ── Custom Scalars ──────────────────────────────────────────
+scalar DateTime
+
+# ── Enums ───────────────────────────────────────────────────
+enum Genre {
+  FICTION
+  NON_FICTION
+  SCIENCE
+  TECHNOLOGY
+  BIOGRAPHY
+  HISTORY
+  FANTASY
+  MYSTERY
+  ROMANCE
+  THRILLER
+  ACTION
+}
+
+enum BookStatus {
+  PUBLISHED
+  DRAFT
+  OUT_OF_PRINT
+  UPCOMING
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+# ── Interfaces ──────────────────────────────────────────────
+interface Node {
+  id: ID!
+}
+
+# ── Object Types ────────────────────────────────────────────
+type Author implements Node {
+  id: ID!
+  name: String!
+  bio: String
+  birthDate: DateTime
+  nationality: String
+  books: [Book!]!
+  bookCount: Int!
+}
+
+type Book implements Node {
+  id: ID!
+  title: String!
+  description: String
+  price: Float!
+  isbn: String!
+  authorId: ID!
+  author: Author!
+  genre: Genre!
+  status: BookStatus!
+  publishedDate: DateTime
+  rating: Float
+  pages: Int
+}
+
+# ── Pagination (Relay-style Cursor Connections) ─────────────
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  totalCount: Int!
+}
+
+type BookEdge {
+  node: Book!
+  cursor: String!
+}
+
+type BookConnection {
+  edges: [BookEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AuthorEdge {
+  node: Author!
+  cursor: String!
+}
+
+type AuthorConnection {
+  edges: [AuthorEdge!]!
+  pageInfo: PageInfo!
+}
+
+# ── Union Types ─────────────────────────────────────────────
+union SearchResult = Author | Book
+
+# ── Input Types ─────────────────────────────────────────────
+input CreateAuthorInput {
+  name: String!
+  bio: String
+  birthDate: DateTime
+  nationality: String
+}
+
+input UpdateAuthorInput {
+  name: String
+  bio: String
+  birthDate: DateTime
+  nationality: String
+}
+
+input CreateBookInput {
+  title: String!
+  description: String
+  price: Float!
+  isbn: String!
+  authorId: ID!
+  genre: Genre!
+  status: BookStatus = DRAFT
+  publishedDate: DateTime
+  rating: Float
+  pages: Int
+}
+
+input UpdateBookInput {
+  title: String
+  description: String
+  price: Float
+  isbn: String
+  authorId: ID
+  genre: Genre
+  status: BookStatus
+  publishedDate: DateTime
+  rating: Float
+  pages: Int
+}
+
+input BookFilterInput {
+  genre: Genre
+  status: BookStatus
+  minPrice: Float
+  maxPrice: Float
+  minRating: Float
+}
+
+input PaginationInput {
+  first: Int = 10
+  after: String
+}
+
+# ── Queries ─────────────────────────────────────────────────
+type Query {
+  # Single resource lookups
+  author(id: ID!): Author
+  book(id: ID!): Book
+
+  # Paginated lists
+  authors(pagination: PaginationInput): AuthorConnection!
+  books(
+    filter: BookFilterInput
+    pagination: PaginationInput
+    sortBy: String
+    sortOrder: SortOrder
+  ): BookConnection!
+
+  # Relationship query
+  booksByAuthor(authorId: ID!): [Book!]!
+
+  # Union type search — returns Author | Book
+  search(term: String!): [SearchResult!]!
+
+  allBooks: [Book!]!
+}
+
+# ── Mutations ───────────────────────────────────────────────
+type Mutation {
+  # Author mutations
+  createAuthor(input: CreateAuthorInput!): Author!
+  updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
+  deleteAuthor(id: ID!): Boolean!
+
+  # Book mutations
+  createBook(input: CreateBookInput!): Book!
+  updateBook(id: ID!, input: UpdateBookInput!): Book!
+  deleteBook(id: ID!): Boolean!
+}
+

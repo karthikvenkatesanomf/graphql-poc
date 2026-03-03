@@ -1,0 +1,37 @@
+[
+  {
+    "id": "a1",
+    "name": "George Orwell",
+    "bio": "English novelist, essayist, and critic known for his sharp criticism of political oppression. His works, particularly '1984' and 'Animal Farm', remain among the most influential books of the 20th century.",
+    "birthDate": "1903-06-25",
+    "nationality": "British"
+  },
+  {
+    "id": "a2",
+    "name": "J.K. Rowling",
+    "bio": "British author best known for writing the Harry Potter fantasy series, which has won multiple awards and sold more than 500 million copies worldwide.",
+    "birthDate": "1965-07-31",
+    "nationality": "British"
+  },
+  {
+    "id": "a3",
+    "name": "Stephen King",
+    "bio": "American author of horror, supernatural fiction, suspense, and fantasy novels. His books have sold more than 350 million copies and have been adapted into numerous films and TV series.",
+    "birthDate": "1947-09-21",
+    "nationality": "American"
+  },
+  {
+    "id": "a4",
+    "name": "Agatha Christie",
+    "bio": "English writer known for her 66 detective novels and 14 short story collections, particularly those revolving around Hercule Poirot and Miss Marple.",
+    "birthDate": "1890-09-15",
+    "nationality": "British"
+  },
+  {
+    "id": "a5",
+    "name": "Isaac Asimov",
+    "bio": "American writer and professor of biochemistry, known for his works of science fiction and popular science. He is considered one of the 'Big Three' science-fiction writers.",
+    "birthDate": "1920-01-02",
+    "nationality": "American"
+  }
+]
