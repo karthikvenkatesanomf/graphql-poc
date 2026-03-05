@@ -56,11 +56,11 @@ export class BooksResolver {
   @Query('updateBook')
   updateBookViaQuery(
     @Args('id') id: string,
-    @Args('status') status: string,
+    @Args('price') price: number,
   ): Promise<BookEntity | []> {
     console.log('[Query] - updateBook called');
     return new Promise((resolve) => {
-      setTimeout(() => resolve(this.booksService.update(id, { status })), 1000);
+      setTimeout(() => resolve(this.booksService.update(id, { price })), 1000);
     });
   }
 
@@ -76,11 +76,11 @@ export class BooksResolver {
   @Mutation('updateBook')
   updateBook(
     @Args('id') id: string,
-    @Args('status') status: string,
+    @Args('price') price: number,
   ): Promise<BookEntity | []> {
     console.log('[Mutation] updateBook called');
     return new Promise((resolve) => {
-      setTimeout(() => resolve(this.booksService.update(id, { status })), 1000);
+      setTimeout(() => resolve(this.booksService.update(id, { price })), 1000);
     });
   }
 }

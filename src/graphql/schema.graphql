@@ -90,13 +90,13 @@ type Query {
   booksByAuthor(authorId: ID!): [Book!]!
   booksByGenre(genre: Genre!): [Book!]!
   createBook(input: CreateBookInput!): Book!
-  updateBook(id: ID!, status: BookStatus!): Book!
+  updateBook(id: ID!, price: Float!): Book!
 }
 
-# ── Mutations ───────────────────────────────────────────────
+# ── Mutations ───────────────────────────────────────────
 type Mutation {
   createAuthor(input: CreateAuthorInput!): Author!
   createBook(input: CreateBookInput!): Book!
-  updateBook(id: ID!, status: BookStatus!): Book!
+  updateBook(id: ID!, price: Float!): Book!
 }
 
