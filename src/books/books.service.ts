@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { BookEntity } from '../common/entities';
 import booksData from '../data/books.json';
 
@@ -24,7 +25,7 @@ export class BooksService {
 
   create(input: Partial<BookEntity>): BookEntity {
     const book: BookEntity = {
-      id: input.id!,
+      id: input.id || uuidv4(),
       title: input.title!,
       description: input.description,
       price: input.price!,

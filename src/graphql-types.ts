@@ -45,7 +45,7 @@ export class CreateAuthorInput {
 }
 
 export class CreateBookInput {
-    id: string;
+    id?: Nullable<string>;
     title: string;
     description?: Nullable<string>;
     price: number;

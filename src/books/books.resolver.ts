@@ -44,7 +44,6 @@ export class BooksResolver {
     return this.authorsService.findById(book.authorId);
   };
 
-  // ── Query-based write operations (for caching demo) ──
   @Query('createBook')
   createBookViaQuery(@Args('input') input: Partial<BookEntity>): Promise<BookEntity> {
     console.log('[Query] createBook called');
@@ -64,7 +63,6 @@ export class BooksResolver {
     });
   }
 
-  // ── Mutation-based write operations (standard) ──
   @Mutation('createBook')
   createBook(@Args('input') input: Partial<BookEntity>): Promise<BookEntity> {
     console.log('[Mutation] createBook called');
