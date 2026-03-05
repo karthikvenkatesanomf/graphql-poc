@@ -45,6 +45,7 @@ export class CreateAuthorInput {
 }
 
 export class CreateBookInput {
+    id: string;
     title: string;
     description?: Nullable<string>;
     price: number;
@@ -100,7 +101,7 @@ export abstract class IQuery {
 
     abstract createBook(input: CreateBookInput): Book | Promise<Book>;
 
-    abstract updateBook(id: string, status: BookStatus): Book | Promise<Book>;
+    abstract updateBook(id: string, price: number): Book | Promise<Book>;
 }
 
 export abstract class IMutation {
@@ -110,7 +111,7 @@ export abstract class IMutation {
 
     abstract createBook(input: CreateBookInput): Book | Promise<Book>;
 
-    abstract updateBook(id: string, status: BookStatus): Book | Promise<Book>;
+    abstract updateBook(id: string, price: number): Book | Promise<Book>;
 }
 
 export type DateTime = Date;
