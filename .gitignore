@@ -1,7 +1,7 @@
-# Nestjs specific
-/dist
-/node_modules
-/build
+# Monorepo
+node_modules/
+dist/
+build/
 /tmp
 
 # Logs
