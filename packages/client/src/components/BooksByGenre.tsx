@@ -2,6 +2,19 @@ import { useState } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
 import { GET_BOOKS_BY_GENRE } from '../graphql/operations';
 
+interface Book {
+  id: string;
+  title: string;
+  author: { name: string };
+  price: number;
+  rating?: number;
+  status: string;
+}
+
+interface BooksByGenreData {
+  booksByGenre: Book[];
+}
+
 const GENRES = [
   'FICTION', 'NON_FICTION', 'SCIENCE', 'TECHNOLOGY',
   'BIOGRAPHY', 'HISTORY', 'FANTASY', 'MYSTERY',
@@ -10,7 +23,7 @@ const GENRES = [
 
 export default function BooksByGenre() {
   const [genre, setGenre] = useState('FICTION');
-  const [fetchBooks, { loading, error, data }] = useLazyQuery(GET_BOOKS_BY_GENRE);
+  const [fetchBooks, { loading, error, data }] = useLazyQuery<BooksByGenreData>(GET_BOOKS_BY_GENRE);
 
   const handleSearch = () => {
     fetchBooks({ variables: { genre } });
@@ -45,7 +58,7 @@ export default function BooksByGenre() {
             </tr>
           </thead>
           <tbody>
-            {data.booksByGenre.map((book: any) => (
+            {data.booksByGenre.map((book) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author.name}</td>

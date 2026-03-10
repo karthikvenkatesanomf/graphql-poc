@@ -13,6 +13,14 @@ interface LogEntry {
   result: any;
 }
 
+interface UpdateBookResponse {
+  updateBook: {
+    id: string;
+    title: string;
+    price: number;
+  };
+}
+
 export default function CachingDemo() {
   const [bookId, setBookId] = useState('b1');
   const [price, setPrice] = useState(19.99);
@@ -21,12 +29,12 @@ export default function CachingDemo() {
   const [mutationCount, setMutationCount] = useState({ total: 0, server: 0 });
 
   // Query — uses Apollo cache (cache-first by default)
-  const [runUpdateQuery] = useLazyQuery(UPDATE_BOOK_QUERY, {
+  const [runUpdateQuery] = useLazyQuery<UpdateBookResponse>(UPDATE_BOOK_QUERY, {
     fetchPolicy: 'cache-first',
   });
 
   // Mutation — always hits server
-  const [runUpdateMutation] = useMutation(UPDATE_BOOK_MUTATION);
+  const [runUpdateMutation] = useMutation<UpdateBookResponse>(UPDATE_BOOK_MUTATION);
 
   const now = () => new Date().toLocaleTimeString('en-US', {
     hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit',
@@ -76,10 +84,11 @@ export default function CachingDemo() {
   const handleMutation = async () => {
     const start = performance.now();
     try {
-      const { data, errors } = await runUpdateMutation({
+      const result = await runUpdateMutation({
         variables: { id: bookId, price },
       });
       const duration = Math.round(performance.now() - start);
+      const { data, errors } = result as any;
 
       setMutationCount(prev => ({
         total: prev.total + 1,

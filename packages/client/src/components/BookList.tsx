@@ -1,8 +1,22 @@
 import { useQuery } from '@apollo/client/react';
 import { GET_ALL_BOOKS } from '../graphql/operations';
 
+interface Book {
+  id: string;
+  title: string;
+  author: { name: string };
+  genre: string;
+  price: number;
+  rating?: number;
+  status: string;
+}
+
+interface GetAllBooksData {
+  allBooks: Book[];
+}
+
 export default function BookList() {
-  const { loading, error, data, refetch } = useQuery(GET_ALL_BOOKS);
+  const { loading, error, data, refetch } = useQuery<GetAllBooksData>(GET_ALL_BOOKS);
 
   if (loading) return <div className="loading">Loading books...</div>;
   if (error) return <div className="error">Error: {error.message}</div>;
@@ -27,7 +41,7 @@ export default function BookList() {
           </tr>
         </thead>
         <tbody>
-          {data.allBooks.map((book: any) => (
+          {data?.allBooks.map((book: Book) => (
             <tr key={book.id}>
               <td>{book.title}</td>
               <td>{book.author.name}</td>

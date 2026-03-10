@@ -4,12 +4,16 @@ import { gql } from '@apollo/client';
 import { GET_AUTHORS } from '../graphql/operations';
 import client from '../apollo/client';
 
+interface AuthorsResponse {
+  authors: { id: string; name: string }[];
+}
+
 export default function CreateBook() {
-  const { data: authorsData } = useQuery(GET_AUTHORS);
+  const { data: authorsData } = useQuery<AuthorsResponse>(GET_AUTHORS);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<{ createBook: { id: string; title: string; price: number; genre: string; status: string; author: { name: string } } } | null>(null);
   const [mode, setMode] = useState<'query' | 'mutation'>('mutation');
 
   const [form, setForm] = useState({
@@ -26,7 +30,7 @@ export default function CreateBook() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const createBookQuery = async (input: any): any => {
+  const createBookQuery = async (input: any) => {
     const { data } = await client.query({
       query: gql`
         query CreateBook($input: CreateBookInput!) {
