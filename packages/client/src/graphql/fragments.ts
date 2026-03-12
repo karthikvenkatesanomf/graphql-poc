@@ -35,7 +35,8 @@ import { gql } from '@apollo/client';
  */
 export const AUTHOR_SUMMARY_FIELDS = gql`
   fragment AuthorSummaryFields on Author {
-    price
+    id
+    name
   }
 `;
 
