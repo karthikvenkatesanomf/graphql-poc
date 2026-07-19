@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client/react';
-import { GET_ALL_BOOKS } from '../graphql/operations';
+import { useQuery, useSubscription } from '@apollo/client/react';
+import { GET_ALL_BOOKS, BOOK_CREATED } from '../graphql/operations';
 
 interface Book {
   id: string;
@@ -17,9 +17,16 @@ interface GetAllBooksData {
 
 export default function BookList() {
   const { loading, error, data, refetch } = useQuery<GetAllBooksData>(GET_ALL_BOOKS);
+  const { data: subData } = useSubscription(BOOK_CREATED, {
+    onData: () => {
+      void refetch();
+    },
+  });
 
   if (loading) return <div className="loading">Loading books...</div>;
   if (error) return <div className="error">Error: {error.message}</div>;
+
+  const lastCreated = subData?.bookCreated;
 
   return (
     <div className="section">
@@ -29,6 +36,12 @@ export default function BookList() {
           Refresh
         </button>
       </div>
+      <p className="subtitle" style={{ marginTop: 0, marginBottom: '1rem' }}>
+        <strong>Realtime:</strong> subscribed to <code>bookCreated</code>
+        {lastCreated
+          ? ` — latest event: “${lastCreated.title}”`
+          : '. Create a book in another tab to see the list update.'}
+      </p>
       <table>
         <thead>
           <tr>

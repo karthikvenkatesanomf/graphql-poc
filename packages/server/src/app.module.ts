@@ -18,14 +18,30 @@ import { DrizzleModule } from './drizzle/drizzle.module';
       playground: process.env.NODE_ENV !== 'production',
       introspection: process.env.NODE_ENV !== 'production',
       sortSchema: true,
-      context: ({ req }: { req: any }) => {
-        const useDataLoader = req?.headers?.['x-use-dataloader'] === 'true';
-        console.log(`\n${'='.repeat(60)}`);
-        console.log(useDataLoader
-          ? '\x1b[32m📦 MODE: WITH DataLoader ✅\x1b[0m'
-          : '\x1b[31m🐌 MODE: WITHOUT DataLoader (N+1) ❌\x1b[0m');
-        console.log('='.repeat(60));
-        return { useDataLoader };
+      subscriptions: {
+        'graphql-ws': true,
+      },
+      context: (ctx: {
+        req?: { headers?: Record<string, string | string[] | undefined> };
+        connectionParams?: Record<string, unknown>;
+      }) => {
+        const header =
+          ctx.req?.headers?.['x-use-dataloader'] ??
+          ctx.connectionParams?.['x-use-dataloader'];
+        const useDataLoader =
+          header === 'true' || header === true;
+        const logReq = !!ctx.req;
+        if (logReq) {
+          console.log(`\n${'='.repeat(60)}`);
+          console.log(
+            useDataLoader
+              ? '\x1b[32m📦 MODE: WITH DataLoader ✅\x1b[0m'
+              : '\x1b[31m🐌 MODE: WITHOUT DataLoader (N+1) ❌\x1b[0m',
+          );
+          console.log('='.repeat(60));
+        }
+        // WebSocket subscriptions have no `req`; default to DataLoader on.
+        return { useDataLoader: logReq ? useDataLoader : true };
       },
       plugins: [
     ApolloServerPluginCacheControl({ defaultMaxAge: 60 }),

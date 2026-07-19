@@ -114,5 +114,11 @@ export abstract class IMutation {
     abstract updateBook(id: string, price: number): Book | Promise<Book>;
 }
 
+export abstract class ISubscription {
+    __typename?: 'ISubscription';
+
+    abstract bookCreated(): Book | Promise<Book>;
+}
+
 export type DateTime = Date;
 type Nullable<T> = T | null;

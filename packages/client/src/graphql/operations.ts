@@ -91,6 +91,24 @@ export const GET_BOOKS_BY_AUTHOR = gql`
   ${BOOK_CORE_FIELDS}
 `;
 
+// ── Subscriptions (WebSocket) ───────────────────────────
+
+/** Fires when any client creates a book (query or mutation on the server). */
+export const BOOK_CREATED = gql`
+  subscription OnBookCreated {
+    bookCreated {
+      id
+      title
+      price
+      genre
+      status
+      author {
+        name
+      }
+    }
+  }
+`;
+
 // ── Mutations ────────────────────────────────────────────
 
 export const CREATE_AUTHOR = gql`

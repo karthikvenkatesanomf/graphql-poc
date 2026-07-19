@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -8,15 +9,19 @@ import {
   Context,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
+import { PubSub } from 'graphql-subscriptions';
 import { BooksService } from './books.service';
 import { AuthorsService } from '../authors/authors.service';
 import { Book, Author } from '../drizzle/schema';
+import { BOOK_CREATED } from './books-subscription.resolver';
+import { PUB_SUB } from './pubsub.token';
 
 @Resolver('Book')
 export class BooksResolver {
   constructor(
     private readonly booksService: BooksService,
     private readonly authorsService: AuthorsService,
+    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
 
   @Query('book')
@@ -58,9 +63,11 @@ export class BooksResolver {
   }
 
   @Query('createBook')
-  createBookViaQuery(@Args('input') input: Partial<Book>) {
+  async createBookViaQuery(@Args('input') input: Partial<Book>) {
     console.log('[Query] createBook called');
-    return this.booksService.create(input);
+    const book = await this.booksService.create(input);
+    await this.pubSub.publish(BOOK_CREATED, { bookCreated: book });
+    return book;
   }
 
   @Query('updateBook')
@@ -73,9 +80,11 @@ export class BooksResolver {
   }
 
   @Mutation('createBook')
-  createBook(@Args('input') input: Partial<Book>) {
+  async createBook(@Args('input') input: Partial<Book>) {
     console.log('[Mutation] createBook called');
-    return this.booksService.create(input);
+    const book = await this.booksService.create(input);
+    await this.pubSub.publish(BOOK_CREATED, { bookCreated: book });
+    return book;
   }
 
   @Mutation('updateBook')
